@@ -70,32 +70,22 @@
     <img class="logo" src="Abra-logo-FullColor-blue.png" alt="Logo">
     <div class="container">
         <h2>Case Closure Survey</h2>
-
-        <!-- Satisfaction Question -->
         <div class="question" id="satisfaction">
-            <p>1. How satisfied are you with the resolution of your case?</p>
-            <div class="stars">
-                <span class="star" data-value="1">&#9733;</span>
-                <span class="star" data-value="2">&#9733;</span>
-                <span class="star" data-value="3">&#9733;</span>
-                <span class="star" data-value="4">&#9733;</span>
-                <span class="star" data-value="5">&#9733;</span>
-            </div>
+            <p>1. How satisfied are you with our service?</p>
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
         </div>
-
-        <!-- Professionalism Question -->
         <div class="question" id="professionalism">
-            <p>2. How would you rate the professionalism of the support team?</p>
-            <div class="stars">
-                <span class="star" data-value="1">&#9733;</span>
-                <span class="star" data-value="2">&#9733;</span>
-                <span class="star" data-value="3">&#9733;</span>
-                <span class="star" data-value="4">&#9733;</span>
-                <span class="star" data-value="5">&#9733;</span>
-            </div>
+            <p>2. How would you rate the professionalism of our staff?</p>
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
         </div>
-
-        <!-- Timely Resolution Question -->
         <div class="question">
             <p>3. Was your issue resolved in a timely manner?</p>
             <input type="radio" name="timely" value="Yes"> Yes<br>
@@ -108,7 +98,7 @@
             <textarea id="comments" placeholder="Enter your answer"></textarea>
         </div>
 
-        <button id="submit" disabled>Submit</button>
+        <button id="submit-button" disabled>Submit</button>
     </div>
 
     <script>
@@ -116,7 +106,7 @@
         const professionalismStars = document.querySelectorAll('#professionalism .star');
         const timelyRadios = document.querySelectorAll('input[name="timely"]');
         const commentsInput = document.getElementById('comments');
-        const submitButton = document.getElementById('submit');
+        const submitButton = document.getElementById('submit-button');
 
         let satisfactionRating = null;
         let professionalismRating = null;
@@ -135,40 +125,48 @@
         }
 
         satisfactionStars.forEach(star => {
-            star.addEventListener('click', event => handleStarClick(event, satisfactionStars, 'satisfactionRating'));
+            star.addEventListener('click', (event) => handleStarClick(event, satisfactionStars, 'satisfactionRating'));
         });
 
         professionalismStars.forEach(star => {
-            star.addEventListener('click', event => handleStarClick(event, professionalismStars, 'professionalismRating'));
+            star.addEventListener('click', (event) => handleStarClick(event, professionalismStars, 'professionalismRating'));
         });
 
         timelyRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                timelyResponse = document.querySelector('input[name="timely"]:checked').value;
+            radio.addEventListener('change', (event) => {
+                timelyResponse = event.target.value;
                 validateForm();
             });
         });
 
-        // Validate form
         function validateForm() {
-            const isFormValid = satisfactionRating && professionalismRating && timelyResponse;
-            submitButton.disabled = !isFormValid;
+            if (satisfactionRating && professionalismRating && timelyResponse) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
         }
 
-        // Submit button click
-        submitButton.addEventListener('click', () => {
-            const comments = commentsInput.value || null;
+        submitButton.addEventListener('click', function() {
+            if (!satisfactionRating || !professionalismRating || !timelyResponse) {
+                alert('Please fill out all mandatory fields.');
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Submitting...";
+
             const data = {
                 satisfaction: satisfactionRating,
                 professionalism: professionalismRating,
                 timely: timelyResponse,
-                comments: comments,
+                comments: commentsInput.value,
                 inputParam: inputParameter
             };
 
             console.log("Submitting data:", JSON.stringify(data)); // For debugging
 
-            fetch('https://your-endpoint-url.com/api/survey', {
+            fetch('https://prod-56.westus.logic.azure.com:443/workflows/bac466fc5fe94cf786f2229767960462/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3frJF_-0eBeuy6fnvjzLfj4JuORNsDMdQC_Ym0PnWHE', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -176,13 +174,18 @@
             .then(response => {
                 if (response.ok) {
                     alert('Survey submitted successfully!');
+                    submitButton.textContent = "Submitted";
                 } else {
                     alert('Failed to submit the survey.');
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Submit";
                 }
             })
             .catch(error => {
                 alert('An error occurred. Please try again later.');
                 console.error(error);
+                submitButton.disabled = false;
+                submitButton.textContent = "Submit";
             });
         });
     </script>
