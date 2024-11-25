@@ -7,196 +7,182 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f6fbfc;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            height: 100vh;
-            position: relative;
+            background-color: #f9f9f9;
         }
         .container {
-            background: white;
+            width: 80%;
+            max-width: 600px;
+            background: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-        .logo {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .logo img {
-            width: 100px;
-            height: auto;
-        }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-top: 50px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .question {
             margin-bottom: 20px;
         }
-        .question label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
         .stars {
             display: flex;
-            gap: 5px;
         }
-        .stars span {
-            font-size: 24px;
+        .star {
+            font-size: 30px;
             cursor: pointer;
-            color: lightgray;
-            transition: color 0.2s;
+            color: #ccc;
         }
-        .stars span.hovered,
-        .stars span.selected {
+        .star.selected {
             color: gold;
         }
-        .radio-group {
-            display: flex;
-            gap: 10px;
-        }
-        .textarea {
+        textarea {
             width: 100%;
-            min-height: 80px;
-            padding: 10px;
-            font-size: 14px;
+            height: 80px;
+            border-radius: 5px;
             border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .submit-btn {
-            display: inline-block;
-            background: #0078d4;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            padding: 10px;
             font-size: 16px;
         }
-        .submit-btn:hover {
-            background: #005a9e;
+        button {
+            background-color: #0078d4;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        img.logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 100px;
         }
     </style>
 </head>
 <body>
-    <!-- Logo -->
-    <div class="logo">
-        <img src="/mnt/data/Abra-logo-FullColor-blue.png" alt="Abra Logo">
-    </div>
-
+    <img class="logo" src="Abra-logo-FullColor-blue.png" alt="Logo">
     <div class="container">
-        <h1>Case Closure Survey</h1>
-        <form id="survey-form">
-            <div class="question">
-                <label for="satisfaction">1. How satisfied are you with the resolution of your case?</label>
-                <div class="stars" id="satisfaction">
-                    <span data-value="1">&#9733;</span>
-                    <span data-value="2">&#9733;</span>
-                    <span data-value="3">&#9733;</span>
-                    <span data-value="4">&#9733;</span>
-                    <span data-value="5">&#9733;</span>
-                </div>
+        <h2>Case Closure Survey</h2>
+
+        <!-- Satisfaction Question -->
+        <div class="question" id="satisfaction">
+            <p>1. How satisfied are you with the resolution of your case?</p>
+            <div class="stars">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
             </div>
-            <div class="question">
-                <label for="professionalism">2. How would you rate the professionalism of the support team?</label>
-                <div class="stars" id="professionalism">
-                    <span data-value="1">&#9733;</span>
-                    <span data-value="2">&#9733;</span>
-                    <span data-value="3">&#9733;</span>
-                    <span data-value="4">&#9733;</span>
-                    <span data-value="5">&#9733;</span>
-                </div>
+        </div>
+
+        <!-- Professionalism Question -->
+        <div class="question" id="professionalism">
+            <p>2. How would you rate the professionalism of the support team?</p>
+            <div class="stars">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
             </div>
-            <div class="question">
-                <label>3. Was your issue resolved in a timely manner?</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="timely" value="Yes"> Yes</label>
-                    <label><input type="radio" name="timely" value="No"> No</label>
-                </div>
-            </div>
-            <div class="question">
-                <label for="comments">4. Please provide any additional comments or suggestions.</label>
-                <textarea id="comments" class="textarea" placeholder="Enter your answer"></textarea>
-            </div>
-            <button type="button" class="submit-btn" id="submit-btn">Submit</button>
-        </form>
+        </div>
+
+        <!-- Timely Resolution Question -->
+        <div class="question">
+            <p>3. Was your issue resolved in a timely manner?</p>
+            <input type="radio" name="timely" value="Yes"> Yes<br>
+            <input type="radio" name="timely" value="No"> No
+        </div>
+
+        <!-- Comments Question -->
+        <div class="question">
+            <p>4. Please provide any additional comments or suggestions.</p>
+            <textarea id="comments" placeholder="Enter your answer"></textarea>
+        </div>
+
+        <button id="submit" disabled>Submit</button>
     </div>
+
     <script>
-        // Retrieve the input parameter from the query string
-        const urlParams = new URLSearchParams(window.location.search);
-        const inputParameter = urlParams.get('inputParam'); // Replace 'inputParam' with your parameter name
+        const satisfactionStars = document.querySelectorAll('#satisfaction .star');
+        const professionalismStars = document.querySelectorAll('#professionalism .star');
+        const timelyRadios = document.querySelectorAll('input[name="timely"]');
+        const commentsInput = document.getElementById('comments');
+        const submitButton = document.getElementById('submit');
 
-        // Handle star hover
-        document.querySelectorAll('.stars').forEach(starGroup => {
-            const stars = Array.from(starGroup.children);
+        let satisfactionRating = null;
+        let professionalismRating = null;
+        let timelyResponse = null;
+        const inputParameter = new URLSearchParams(window.location.search).get('inputParam') || "default";
 
+        // Star click handler
+        function handleStarClick(event, stars, ratingVariable) {
+            const selectedValue = event.target.getAttribute('data-value');
             stars.forEach(star => {
-                // Highlight stars on hover
-                star.addEventListener('mouseover', () => {
-                    const hoverValue = star.getAttribute('data-value');
-                    stars.forEach(s => {
-                        if (s.getAttribute('data-value') <= hoverValue) {
-                            s.classList.add('hovered');
-                        }
-                    });
-                });
+                star.classList.toggle('selected', star.getAttribute('data-value') <= selectedValue);
+            });
+            if (stars === satisfactionStars) satisfactionRating = selectedValue;
+            if (stars === professionalismStars) professionalismRating = selectedValue;
+            validateForm();
+        }
 
-                // Remove highlight when not hovering
-                star.addEventListener('mouseout', () => {
-                    stars.forEach(s => s.classList.remove('hovered'));
-                });
+        satisfactionStars.forEach(star => {
+            star.addEventListener('click', event => handleStarClick(event, satisfactionStars, 'satisfactionRating'));
+        });
 
-                // Handle star selection
-                star.addEventListener('click', () => {
-                    const selectedValue = star.getAttribute('data-value');
-                    stars.forEach(s => {
-                        s.classList.toggle('selected', s.getAttribute('data-value') <= selectedValue);
-                    });
-                });
+        professionalismStars.forEach(star => {
+            star.addEventListener('click', event => handleStarClick(event, professionalismStars, 'professionalismRating'));
+        });
+
+        timelyRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                timelyResponse = document.querySelector('input[name="timely"]:checked').value;
+                validateForm();
             });
         });
 
-        // Handle form submission
-        document.getElementById('submit-btn').addEventListener('click', () => {
-            const satisfactionRating = document.querySelector('#satisfaction .selected:last-child')?.getAttribute('data-value') || null;
-            const professionalismRating = document.querySelector('#professionalism .selected:last-child')?.getAttribute('data-value') || null;
-            const timelyResolution = document.querySelector('input[name="timely"]:checked')?.value || null;
-            const comments = document.getElementById('comments').value;
+        // Validate form
+        function validateForm() {
+            const isFormValid = satisfactionRating && professionalismRating && timelyResponse;
+            submitButton.disabled = !isFormValid;
+        }
 
+        // Submit button click
+        submitButton.addEventListener('click', () => {
+            const comments = commentsInput.value || null;
             const data = {
                 satisfaction: satisfactionRating,
                 professionalism: professionalismRating,
-                timely: timelyResolution,
+                timely: timelyResponse,
                 comments: comments,
-                inputParam: inputParameter // Include the input parameter in the payload
+                inputParam: inputParameter
             };
 
-            fetch('https://prod-56.westus.logic.azure.com:443/workflows/bac466fc5fe94cf786f2229767960462/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3frJF_-0eBeuy6fnvjzLfj4JuORNsDMdQC_Ym0PnWHE', {
+            console.log("Submitting data:", JSON.stringify(data)); // For debugging
+
+            fetch('https://your-endpoint-url.com/api/survey', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
             .then(response => {
                 if (response.ok) {
                     alert('Survey submitted successfully!');
                 } else {
-                    alert('Failed to submit survey.');
+                    alert('Failed to submit the survey.');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error submitting survey.');
+                alert('An error occurred. Please try again later.');
+                console.error(error);
             });
         });
     </script>
