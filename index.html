@@ -37,6 +37,9 @@
         .star.selected {
             color: gold;
         }
+        .star.hovered {
+            color: gold;
+        }
         textarea {
             width: 100%;
             height: 80px;
@@ -98,6 +101,12 @@
             <textarea id="comments" placeholder="Enter your answer"></textarea>
         </div>
 
+        <!-- Additional Parameter Input -->
+        <div class="question">
+            <p>5. Additional Parameter:</p>
+            <input type="text" id="additional-param" placeholder="Enter additional parameter">
+        </div>
+
         <button id="submit-button" disabled>Submit</button>
     </div>
 
@@ -106,6 +115,7 @@
         const professionalismStars = document.querySelectorAll('#professionalism .star');
         const timelyRadios = document.querySelectorAll('input[name="timely"]');
         const commentsInput = document.getElementById('comments');
+        const additionalParamInput = document.getElementById('additional-param');
         const submitButton = document.getElementById('submit-button');
 
         let satisfactionRating = null;
@@ -124,12 +134,31 @@
             validateForm();
         }
 
+        // Star hover handler
+        function handleStarHover(event, stars) {
+            const hoverValue = event.target.getAttribute('data-value');
+            stars.forEach(star => {
+                star.classList.toggle('hovered', star.getAttribute('data-value') <= hoverValue);
+            });
+        }
+
+        // Star mouseout handler
+        function handleStarMouseOut(stars) {
+            stars.forEach(star => {
+                star.classList.remove('hovered');
+            });
+        }
+
         satisfactionStars.forEach(star => {
             star.addEventListener('click', (event) => handleStarClick(event, satisfactionStars, 'satisfactionRating'));
+            star.addEventListener('mouseover', (event) => handleStarHover(event, satisfactionStars));
+            star.addEventListener('mouseout', () => handleStarMouseOut(satisfactionStars));
         });
 
         professionalismStars.forEach(star => {
             star.addEventListener('click', (event) => handleStarClick(event, professionalismStars, 'professionalismRating'));
+            star.addEventListener('mouseover', (event) => handleStarHover(event, professionalismStars));
+            star.addEventListener('mouseout', () => handleStarMouseOut(professionalismStars));
         });
 
         timelyRadios.forEach(radio => {
@@ -137,6 +166,10 @@
                 timelyResponse = event.target.value;
                 validateForm();
             });
+        });
+
+        additionalParamInput.addEventListener('input', () => {
+            document.title = `Case Closure Survey - ${additionalParamInput.value}`;
         });
 
         function validateForm() {
@@ -161,6 +194,7 @@
                 professionalism: professionalismRating,
                 timely: timelyResponse,
                 comments: commentsInput.value,
+                additionalParam: additionalParamInput.value,
                 inputParam: inputParameter
             };
 
