@@ -62,52 +62,44 @@
             cursor: not-allowed;
         }
         img.logo {
-            position: absolute;
-            top: 10px;
-            right: 10px;
             width: 100px;
         }
     </style>
 </head>
 <body>
-    <img class="logo" src="Abra-logo-FullColor-blue.png" alt="Logo">
     <div class="container">
-        <h2>Case Closure Survey</h2>
-        <div class="question" id="satisfaction">
-            <p>1. How satisfied are you with our service?</p>
-            <span class="star" data-value="1">&#9733;</span>
-            <span class="star" data-value="2">&#9733;</span>
-            <span class="star" data-value="3">&#9733;</span>
-            <span class="star" data-value="4">&#9733;</span>
-            <span class="star" data-value="5">&#9733;</span>
-        </div>
-        <div class="question" id="professionalism">
-            <p>2. How would you rate the professionalism of our staff?</p>
-            <span class="star" data-value="1">&#9733;</span>
-            <span class="star" data-value="2">&#9733;</span>
-            <span class="star" data-value="3">&#9733;</span>
-            <span class="star" data-value="4">&#9733;</span>
-            <span class="star" data-value="5">&#9733;</span>
-        </div>
-        <div class="question">
-            <p>3. Was your issue resolved in a timely manner?</p>
-            <input type="radio" name="timely" value="Yes"> Yes<br>
-            <input type="radio" name="timely" value="No"> No
-        </div>
+        <img class="logo" src="Abra-logo-FullColor-blue.png" alt="Logo">
+        <h2>Case Closure Survey <span id="inputParameter"></span></h2>
+        <form id="survey-form">
+            <div class="question" id="satisfaction">
+                <p>1. How satisfied are you with our service?</p>
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <div class="question" id="professionalism">
+                <p>2. How would you rate the professionalism of our staff?</p>
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <div class="question">
+                <p>3. Was your issue resolved in a timely manner?</p>
+                <input type="radio" name="timely" value="Yes"> Yes<br>
+                <input type="radio" name="timely" value="No"> No
+            </div>
 
-        <!-- Comments Question -->
-        <div class="question">
-            <p>4. Please provide any additional comments or suggestions.</p>
-            <textarea id="comments" placeholder="Enter your answer"></textarea>
-        </div>
-
-        <!-- Additional Parameter Input -->
-        <div class="question">
-            <p>5. Additional Parameter:</p>
-            <input type="text" id="additional-param" placeholder="Enter additional parameter">
-        </div>
-
-        <button id="submit-button" disabled>Submit</button>
+            <!-- Comments Question -->
+            <div class="question">
+                <p>4. Please provide any additional comments or suggestions.</p>
+                <textarea id="comments" placeholder="Enter your answer"></textarea>
+            </div>
+            <button id="submit-button" disabled>Submit</button>
+        </form>
     </div>
 
     <script>
@@ -115,13 +107,16 @@
         const professionalismStars = document.querySelectorAll('#professionalism .star');
         const timelyRadios = document.querySelectorAll('input[name="timely"]');
         const commentsInput = document.getElementById('comments');
-        const additionalParamInput = document.getElementById('additional-param');
         const submitButton = document.getElementById('submit-button');
+        const form = document.getElementById('survey-form');
 
         let satisfactionRating = null;
         let professionalismRating = null;
         let timelyResponse = null;
-        const inputParameter = new URLSearchParams(window.location.search).get('inputParam') || "default";
+        const inputParameter = new URLSearchParams(window.location.search).get('caseNum') || "default";
+
+         // Set the inputParameter in the title
+         document.getElementById('inputParameter').textContent = `#${inputParameter}`;
 
         // Star click handler
         function handleStarClick(event, stars, ratingVariable) {
@@ -168,10 +163,6 @@
             });
         });
 
-        additionalParamInput.addEventListener('input', () => {
-            document.title = `Test Case Closure Survey - ${additionalParamInput.value}`;
-        });
-
         function validateForm() {
             if (satisfactionRating && professionalismRating && timelyResponse) {
                 submitButton.disabled = false;
@@ -180,7 +171,14 @@
             }
         }
 
-        submitButton.addEventListener('click', function() {
+        submitButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            // Disable all form elements
+            const formElements = form.elements;
+            for (let i = 0; i < formElements.length; i++) {
+                formElements[i].disabled = true;
+            }
+
             if (!satisfactionRating || !professionalismRating || !timelyResponse) {
                 alert('Please fill out all mandatory fields.');
                 return;
@@ -194,8 +192,7 @@
                 professionalism: professionalismRating,
                 timely: timelyResponse,
                 comments: commentsInput.value,
-                additionalParam: additionalParamInput.value,
-                inputParam: inputParameter
+                caseNum: inputParameter
             };
 
             console.log("Submitting data:", JSON.stringify(data)); // For debugging
